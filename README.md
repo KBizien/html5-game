@@ -1,1 +1,1 @@
-Built a html5 game with easel.js
+Html5 game with easel.js
