@@ -8,7 +8,7 @@ var imgLoaded = 0, velocityY = 0, velocityX = 0;
 var jumping = false, inAir = true, gravity = 2;
 var downing = false;
 var imgPerso = new Image();
-var imgDecor = new Image();
+// var imgDecor = new Image();
 var supportLength = [960, 200, 500, 50, 100, 75];
 var supportX = [0, 400, 500, 300, 400, 650];
 var supportY = [580, 390, 500, 300, 200, 100];
@@ -28,9 +28,9 @@ function init() {
 	imgPerso.onload = handleImageLoad;
 	imgPerso.onerror = handleImageError;
 
-	imgDecor.src = "img/decor.jpg";
-	imgDecor.onload = handleImageLoad;
-	imgDecor.onerror = handleImageError;
+	// imgDecor.src = "img/decor.jpg";
+	// imgDecor.onload = handleImageLoad;
+	// imgDecor.onerror = handleImageError;
 }
 
 // fonction qui compte les images loader et amorce le jeu
@@ -49,11 +49,11 @@ function handleImageError(e) {
 
 // fonction début de jeu
 function startGame(){
-	var bg = new createjs.Bitmap(imgDecor);
-	stage.addChild(bg);
+	// var bg = new createjs.Bitmap(imgDecor);
+	// stage.addChild(bg);
 	perso = new Perso(imgPerso);
 	perso.x = 180;
-	perso.y = 490;
+	perso.y = 560;
 	stage.addChild(perso);
 	rocks = new Array();
 	supports = new Array();
@@ -164,7 +164,7 @@ function collisionPerso (xPos, yPos, Radius){
 
 // fonction initialisation du score
 function initScore() {
-	pointsTxt = new createjs.Text(0, "18px Arial", "#fff");
+	pointsTxt = new createjs.Text(0, "18px Arial", "#000");
 	pointsTxt.x = 20;
  	pointsTxt.y = 20;
  	stage.addChild(pointsTxt);
@@ -180,7 +180,7 @@ function pointCounter() {
 
 // fonction partie perdu
 function gameOver(){
- 	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#fff");
+ 	gameTxt = new createjs.Text("Game Over !\n\n", "36px Arial", "#000");
  	gameTxt.text += "Clicker pour jouer à nouveau.";
  	gameTxt.textAlign = "center";
 	gameTxt.x = canvas.width / 2;
