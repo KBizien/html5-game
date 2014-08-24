@@ -11,8 +11,9 @@
 			frames: {width: 77, height: 85, regX: 38.5, regY: 80},
 			animations: {
 				walk: [1, 8, "walk"], 
-				idle: [0, 0], 
-				jump: [6, 6]
+				idle: [0, 0, "idle"], 
+				jump: [6, 6, "jump"],
+				down: [9, 9, "down"],
 			}
 		});
 		createjs.SpriteSheetUtils.addFlippedFrames(spriteSheet, true, false, false);

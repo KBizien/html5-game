@@ -2,9 +2,11 @@
 
 var KEYCODE_SPACE = 32, KEYCODE_UP = 38, KEYCODE_LEFT = 37, KEYCODE_RIGHT = 39;		
 var canvas, stage, leftHeld, rightHeld, supports, rocks, perso, persoCenter;
+var KEYCODE_SPACE = 32, KEYCODE_DOWN = 40, KEYCODE_LEFT = 37, KEYCODE_RIGHT = 39;		
 var keyDown = false, play=true, dir="right";
 var imgLoaded = 0, velocityY = 0, velocityX = 0;
 var jumping = false, inAir = true, gravity = 2;
+var downing = false;
 var imgPerso = new Image();
 var supportLength = [960, 200, 500, 50, 100, 75];
 var supportX = [0, 400, 500, 300, 400, 650];
@@ -110,18 +112,18 @@ function tick() {
 		if (rightHeld){
 			velocityX = 10;
 		}
-		if(leftHeld && keyDown==false && inAir==false){
+		if(leftHeld && keyDown==false && inAir==false && downing==false){
 			perso.gotoAndPlay("walk_h");
 			keyDown=true;
 		}
-		if(rightHeld && keyDown==false &&  inAir==false){
+		if(rightHeld && keyDown==false &&  inAir==false && downing==false){
 			perso.gotoAndPlay("walk");
 			keyDown=true;
 		}
-		if (dir=="left" && keyDown==false && inAir==false){
+		if (dir=="left" && keyDown==false && inAir==false && downing==false){
 			perso.gotoAndStop("idle_h");
 		}
-		if (dir=="right" && keyDown==false && inAir==false){
+		if (dir=="right" && keyDown==false && inAir==false && downing==false){
 			perso.gotoAndStop("idle");
 		}	
 		if (perso.y>600 || perso.x<0 || perso.x>960){
@@ -191,6 +193,20 @@ function jump(){
 	}
 }
 
+// fonction gérant l'abaissement du perso
+ function down(){
+ 	if (downing == false){
+ 		if (dir=="right"){
+ 			perso.gotoAndStop("down");
+ 		}
+ 		else{
+ 			perso.gotoAndStop("down_h");
+ 		}
+ 		downing=true;
+ 		keyDown=false;
+	}
+}
+
 // fonction qui remet à 0 les rochers
 function resetRocks(rck) {
 	rck.y = canvas.height * Math.random()|0;
@@ -215,6 +231,10 @@ function handleKeyDown(e) {
 		case KEYCODE_SPACE:
 			jump();
 			break;
+
+		case KEYCODE_DOWN:
+			down();
+			break;
 	}
 }
 function handleKeyUp(e) {
@@ -230,6 +250,12 @@ function handleKeyUp(e) {
 			rightHeld = false;
 			keyDown=false;
 			perso.gotoAndStop("idle");
+			break;
+
+		case KEYCODE_DOWN:
+			downing = false;
+			perso.gotoAndStop("idle");
+			keyDown=false;
 			break;
 	}
 }
