@@ -19,9 +19,6 @@
 	Support.prototype.makeShape = function() {
 		var realSupport = this.supportBody.graphics;
 		realSupport.beginFill("#000000").rect(0,0,this.width,this.height);
-		
-		//var graphSupport = this.supportGraphic.graphics;
-		//realSupport.beginFill("#000000").rect(0,40,this.width,this.height);
 	}
 	window.Support = Support;
 }());
