@@ -1,9 +1,8 @@
 // déclaration des variables
 
 var KEYCODE_SPACE = 32, KEYCODE_UP = 38, KEYCODE_LEFT = 37, KEYCODE_RIGHT = 39;		
-var canvas, stage, leftHeld, rightHeld, supports, perso;
-var keyDown = false, dir="right";
 var canvas, stage, leftHeld, rightHeld, supports, rocks, perso, persoCenter;
+var keyDown = false, play=true, dir="right";
 var imgLoaded = 0, velocityY = 0, velocityX = 0;
 var jumping = false, inAir = true, gravity = 2;
 var imgPerso = new Image();
@@ -70,42 +69,29 @@ function startGame(){
 
 // fonction qui écoute les events de la scène et permet les animations
 function tick() {
-	velocityY+=gravity; // gravité
-	if (inAir){
-		perso.y+=velocityY;
-	}
-	if (velocityY>15){ // limite la velocitye de chute
-		velocityY=15;
-	}
-	for(i=0; i < supports.length; i++){ // boucle sur chaque support
-		// test si le perso est en constact d'un support
-		if (perso.y >= supports[i].y && perso.y<= (supports[i].y+supports[i].height) && perso.x > supports[i].x && perso.x<(supports[i].x+supports[i].width)){
-		 	perso.y=supports[i].y;
-			velocityY=0;	
-			jumping = false;
-		 	inAir = false;
-		 	break
+	persoCenter = perso.y-40;
+	if (play){
+		velocityY+=gravity; // gravité
+		if (inAir){
+			perso.y+=velocityY;
 		}
-		else {
-			inAir = true;
+		if (velocityY>15){ // limite la velocitye de chute
+			velocityY=15;
 		}
-	}				
-	if (leftHeld){
-		velocityX = -10;	
-	}
-	if (rightHeld){
-		velocityX = 10;
-	}
-	if(leftHeld && keyDown==false && inAir==false){
-		perso.gotoAndPlay("walk_h");
-		keyDown=true;
-	}
-	if(rightHeld && keyDown==false &&  inAir==false){
-		perso.gotoAndPlay("walk");
-		keyDown=true;
-	}
-	if (dir=="left" && keyDown==false && inAir==false){
-		perso.gotoAndStop("idle_h");
+		for(i=0; i < supports.length; i++){ // boucle sur chaque support
+			// test si le perso est en constact d'un support
+			if (perso.y >= supports[i].y && perso.y<= (supports[i].y+supports[i].height) && perso.x > supports[i].x && perso.x<(supports[i].x+supports[i].width)){
+			 	perso.y=supports[i].y;
+				velocityY=0;	
+				jumping = false;
+			 	inAir = false;
+			 	break
+			}
+			else {
+				inAir = true;
+			}
+		}	
+
 		for(j=0; j < rocks.length; j++){ //move crates
 			var rck = rocks[j];
 			rck.x-=rck.speed;
@@ -117,12 +103,33 @@ function tick() {
 				gameOver();
 			}
 		}
+
+		if (leftHeld){
+			velocityX = -10;	
+		}
+		if (rightHeld){
+			velocityX = 10;
+		}
+		if(leftHeld && keyDown==false && inAir==false){
+			perso.gotoAndPlay("walk_h");
+			keyDown=true;
+		}
+		if(rightHeld && keyDown==false &&  inAir==false){
+			perso.gotoAndPlay("walk");
+			keyDown=true;
+		}
+		if (dir=="left" && keyDown==false && inAir==false){
+			perso.gotoAndStop("idle_h");
+		}
+		if (dir=="right" && keyDown==false && inAir==false){
+			perso.gotoAndStop("idle");
+		}	
+		if (perso.y>600 || perso.x<0 || perso.x>960){
+			gameOver();
+		}
+		perso.x+=velocityX;			
+		velocityX=velocityX*0.5; // inertie pour que le perso s'arrête aux relachements des touches
 	}
-	if (dir=="right" && keyDown==false && inAir==false){
-		perso.gotoAndStop("idle");
-	}	
-	perso.x+=velocityX;			
-	velocityX=velocityX*0.5; // inertie pour que le perso s'arrête aux relachements des touches
 	stage.update();
 }
 
@@ -135,6 +142,39 @@ function collisionPerso (xPos, yPos, Radius){
 		return true;	
 	}
 }
+
+// fonction partie perdu
+function gameOver(){
+ 	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#000");
+ 	gameTxt.text += "Clicker pour jouer à nouveau.";
+ 	gameTxt.textAlign = "center";
+	gameTxt.x = canvas.width / 2;
+ 	gameTxt.y = canvas.height / 4;
+ 	stage.addChild(gameTxt);
+ 	end();
+	canvas.onclick = handleClick;
+}
+// fonction fin du jeu
+function end(){
+ 	play=false;
+ 	var l = rocks.length;
+ 	for (var i=0; i<l; i++) {
+ 		var r = rocks[i];
+ 		resetRocks(r);
+ 	}
+ 	perso.visible=false;
+ 	stage.update();
+}
+// fonction jeu remis à 0 au click
+function handleClick() {
+ 	canvas.onclick = null;
+ 	perso.visible=true;
+ 	perso.x = 180;
+ 	perso.y = 490;
+ 	stage.removeChild(gameTxt);	
+	play=true;
+}
+
 // fonction gérant les sauts du perso
 function jump(){
 	if (jumping == false && inAir == false){
