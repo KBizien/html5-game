@@ -3,6 +3,7 @@
 var KEYCODE_SPACE = 32, KEYCODE_UP = 38, KEYCODE_LEFT = 37, KEYCODE_RIGHT = 39;		
 var canvas, stage, leftHeld, rightHeld, supports, perso;
 var keyDown = false, dir="right";
+var canvas, stage, leftHeld, rightHeld, supports, rocks, perso, persoCenter;
 var imgLoaded = 0, velocityY = 0, velocityX = 0;
 var jumping = false, inAir = true, gravity = 2;
 var imgPerso = new Image();
@@ -46,7 +47,7 @@ function startGame(){
 	perso.x = 180;
 	perso.y = 490;
 	stage.addChild(perso);
-
+	rocks = new Array();
 	supports = new Array();
 	for(i=0; i < supportLength.length; i++){
 		var support = new Support(supportLength[i],20);
@@ -54,6 +55,12 @@ function startGame(){
 		stage.addChild(support);
 		support.x = supportX[i];
 		support.y = supportY[i];
+	}
+	for(j=0; j < 5; j++){
+		var rock = new Rock();
+		rocks.push(rock);
+		stage.addChild(rock);
+		resetRocks(rock);
 	}
 
 	createjs.Ticker.on("tick", tick);
@@ -99,6 +106,17 @@ function tick() {
 	}
 	if (dir=="left" && keyDown==false && inAir==false){
 		perso.gotoAndStop("idle_h");
+		for(j=0; j < rocks.length; j++){ //move crates
+			var rck = rocks[j];
+			rck.x-=rck.speed;
+			rck.rotation+=3;
+			if (rck.x<0){
+				resetRocks(rck);
+			}
+			if (collisionPerso (rck.x, rck.y, 20)){//collision detect hero with each falling box
+				gameOver();
+			}
+		}
 	}
 	if (dir=="right" && keyDown==false && inAir==false){
 		perso.gotoAndStop("idle");
@@ -108,6 +126,15 @@ function tick() {
 	stage.update();
 }
 
+// fonction qui détecte les collisions entre les rochers et le personnage
+function collisionPerso (xPos, yPos, Radius){
+	var distX = xPos - perso.x;
+	var distY = yPos - persoCenter;
+	var distR = Radius + 20;
+	if (distX * distX + distY * distY <= distR * distR){
+		return true;	
+	}
+}
 // fonction gérant les sauts du perso
 function jump(){
 	if (jumping == false && inAir == false){
@@ -122,6 +149,13 @@ function jump(){
 		jumping = true;
 		keyDown=false;
 	}
+}
+
+// fonction qui remet à 0 les rochers
+function resetRocks(rck) {
+	rck.y = canvas.height * Math.random()|0;
+	rck.x = 960 + Math.random()*500;
+	rck.speed = (Math.random()*5)+8;
 }
 
 //fonctions contrôle du clavier
