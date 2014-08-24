@@ -8,9 +8,10 @@ var imgLoaded = 0, velocityY = 0, velocityX = 0;
 var jumping = false, inAir = true, gravity = 2;
 var downing = false;
 var imgPerso = new Image();
+var imgDecor = new Image();
 var supportLength = [960, 200, 500, 50, 100, 75];
 var supportX = [0, 400, 500, 300, 400, 650];
-var supportY = [500, 300, 400, 200, 100, 100];
+var supportY = [580, 390, 500, 300, 200, 100];
 //register key functions
 document.onkeydown=handleKeyDown;
 document.onkeyup=handleKeyUp;
@@ -26,6 +27,10 @@ function init() {
 	imgPerso.src = "img/perso.png";
 	imgPerso.onload = handleImageLoad;
 	imgPerso.onerror = handleImageError;
+
+	imgDecor.src = "img/decor.jpg";
+	imgDecor.onload = handleImageLoad;
+	imgDecor.onerror = handleImageError;
 }
 
 // fonction qui compte les images loader et amorce le jeu
@@ -44,7 +49,8 @@ function handleImageError(e) {
 
 // fonction début de jeu
 function startGame(){
-
+	var bg = new createjs.Bitmap(imgDecor);
+	stage.addChild(bg);
 	perso = new Perso(imgPerso);
 	perso.x = 180;
 	perso.y = 490;
@@ -158,7 +164,7 @@ function collisionPerso (xPos, yPos, Radius){
 
 // fonction initialisation du score
 function initScore() {
-	pointsTxt = new createjs.Text(0, "18px Arial", "#000");
+	pointsTxt = new createjs.Text(0, "18px Arial", "#fff");
 	pointsTxt.x = 20;
  	pointsTxt.y = 20;
  	stage.addChild(pointsTxt);
@@ -174,7 +180,7 @@ function pointCounter() {
 
 // fonction partie perdu
 function gameOver(){
- 	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#000");
+ 	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#fff");
  	gameTxt.text += "Clicker pour jouer à nouveau.";
  	gameTxt.textAlign = "center";
 	gameTxt.x = canvas.width / 2;
