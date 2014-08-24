@@ -57,7 +57,7 @@ function startGame(){
 		support.x = supportX[i];
 		support.y = supportY[i];
 	}
-	for(j=0; j < 5; j++){
+	for(j=0; j < 8; j++){
 		var rock = new Rock();
 		rocks.push(rock);
 		stage.addChild(rock);
@@ -71,7 +71,7 @@ function startGame(){
 
 // fonction qui écoute les events de la scène et permet les animations
 function tick() {
-	persoCenter = perso.y-40;
+	persoCenter = perso.y-42.5;
 	if (play){
 		velocityY+=gravity; // gravité
 		if (inAir){
