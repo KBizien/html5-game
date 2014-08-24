@@ -94,7 +94,6 @@ function tick() {
 				inAir = true;
 			}
 		}	
-
 		for(j=0; j < rocks.length; j++){ //move crates
 			var rck = rocks[j];
 			rck.x-=rck.speed;
@@ -109,10 +108,20 @@ function tick() {
 		}
 
 		if (leftHeld){
-			velocityX = -10;	
+			if (perso.x<10){
+				velocityX = 0;
+			}
+			else {
+				velocityX = -10;
+			}
 		}
 		if (rightHeld){
-			velocityX = 10;
+			if (perso.x>950){
+				velocityX = 0;
+			}
+			else {
+				velocityX = 10;
+			}
 		}
 		if(leftHeld && keyDown==false && inAir==false && downing==false){
 			perso.gotoAndPlay("walk_h");
