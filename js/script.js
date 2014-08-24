@@ -1,8 +1,8 @@
 // déclaration des variables
 
-var KEYCODE_SPACE = 32, KEYCODE_UP = 38, KEYCODE_LEFT = 37, KEYCODE_RIGHT = 39;		
-var canvas, stage, leftHeld, rightHeld, supports, rocks, perso, persoCenter;
 var KEYCODE_SPACE = 32, KEYCODE_DOWN = 40, KEYCODE_LEFT = 37, KEYCODE_RIGHT = 39;		
+var canvas, stage, leftHeld, rightHeld, supports, rocks, perso, persoCenter, pointsTxt;
+var points = 0;
 var keyDown = false, play=true, dir="right";
 var imgLoaded = 0, velocityY = 0, velocityX = 0;
 var jumping = false, inAir = true, gravity = 2;
@@ -33,6 +33,7 @@ function handleImageLoad(e) {
 	imgLoaded++;
 	if(imgLoaded == 1){
 		startGame();
+		initScore();
 	}
 }
 // fonction alerte des erreurs, images mal loader
@@ -100,6 +101,7 @@ function tick() {
 			rck.rotation+=3;
 			if (rck.x<0){
 				resetRocks(rck);
+				pointCounter();
 			}
 			if (collisionPerso (rck.x, rck.y, 20)){//collision detect hero with each falling box
 				gameOver();
@@ -145,6 +147,22 @@ function collisionPerso (xPos, yPos, Radius){
 	}
 }
 
+// fonction initialisation du score
+function initScore() {
+	pointsTxt = new createjs.Text(0, "18px Arial", "#000");
+	pointsTxt.x = 20;
+ 	pointsTxt.y = 20;
+ 	stage.addChild(pointsTxt);
+ 	stage.update();
+}
+
+// fonction qui compte les points
+function pointCounter() {
+	points++;
+	pointsTxt.text = points;
+	stage.update();
+}
+
 // fonction partie perdu
 function gameOver(){
  	gameTxt = new createjs.Text("Game Over\n\n", "36px Arial", "#000");
@@ -174,7 +192,10 @@ function handleClick() {
  	perso.x = 180;
  	perso.y = 490;
  	stage.removeChild(gameTxt);	
+ 	stage.removeChild(pointsTxt);
+ 	initScore();	
 	play=true;
+
 }
 
 // fonction gérant les sauts du perso
